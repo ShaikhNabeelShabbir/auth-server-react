@@ -25,7 +25,7 @@ interface Token {
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>(() => {
-    const savedUsers = localStorage.getItem("users");
+    const savedUsers = sessionStorage.getItem("users");
     return savedUsers ? JSON.parse(savedUsers) : [];
   });
 
@@ -60,12 +60,12 @@ const App: React.FC = () => {
 
   const handleBeforeUnload = () => {
     sessionStorage.clear();
-    localStorage.clear();
+    sessionStorage.clear();
   };
   const handleRegister = (user: User) => {
     const updatedUsers = [...users, user];
     setUsers(updatedUsers);
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    sessionStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
   const handleLogin = (username: string) => {
@@ -84,7 +84,7 @@ const App: React.FC = () => {
       user.username === username ? { ...user, password: newPassword } : user
     );
     setUsers(updatedUsers);
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    sessionStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
   const handleCreateToken = (address: string, balance: number) => {
