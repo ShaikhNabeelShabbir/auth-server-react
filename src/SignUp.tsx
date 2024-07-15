@@ -38,6 +38,7 @@ const SignUp: React.FC<SignUpProps> = ({ onRegister }) => {
     
     const hashedPassword = await bcrypt.hash(password, 10);
     onRegister({ username, password: hashedPassword });
+    alert("user created successfully");
     navigate('/login');
   };
 

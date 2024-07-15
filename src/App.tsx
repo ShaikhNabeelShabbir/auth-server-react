@@ -49,7 +49,19 @@ const App: React.FC = () => {
     sessionStorage.setItem("username", username);
     sessionStorage.setItem("tokens", JSON.stringify(tokens));
   }, [loggedIn, username, tokens]);
+  // Clear sessionStorage and localStorage on component unmount (browser tab close)
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      handleBeforeUnload();
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
+  const handleBeforeUnload = () => {
+    sessionStorage.clear();
+    localStorage.clear();
+  };
   const handleRegister = (user: User) => {
     const updatedUsers = [...users, user];
     setUsers(updatedUsers);

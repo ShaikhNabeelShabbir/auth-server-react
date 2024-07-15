@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import bcrypt from 'bcryptjs';
-import { useNavigate } from 'react-router-dom';
-import './styles.css'; // Import the CSS file for styling
+import React, { useState } from "react";
+import bcrypt from "bcryptjs";
+import { useNavigate } from "react-router-dom";
+import "./styles.css"; // Import the CSS file for styling
 
 interface User {
   username: string;
@@ -14,20 +14,22 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = users.find(u => u.username === username);
+    const user = users.find((u) => u.username === username);
 
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       onLogin(username);
-      navigate('/');
+      alert("user loged in successfully");
+
+      navigate("/");
     } else {
-      setError('Invalid username or password');
+      setError("Invalid username or password");
     }
   };
 
