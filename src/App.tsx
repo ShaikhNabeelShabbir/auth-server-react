@@ -53,42 +53,49 @@ const App: React.FC = () => {
     <Router>
       <div className="container">
         {loggedIn ? (
-          <div>
+          <div className="center">
             <h2>Hello {username}</h2>
             <button onClick={handleLogout}>Logout</button>
             <Link to="/change-password">
               <button>Change Password</button>
             </Link>
+            <Routes>
+              <Route
+                path="/change-password"
+                element={
+                  <ChangePassword
+                    onChangePassword={handleChangePassword}
+                    users={users}
+                    currentUser={username}
+                  />
+                }
+              />
+            </Routes>
           </div>
         ) : (
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Sign Up</Link>
-              </li>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-            </ul>
-          </nav>
-        )}
-        <Routes>
-          <Route path="/" element={<SignUp onRegister={handleRegister} />} />
-          <Route
-            path="/login"
-            element={<Login users={users} onLogin={handleLogin} />}
-          />
-          <Route
-            path="/change-password"
-            element={
-              <ChangePassword
-                onChangePassword={handleChangePassword}
-                users={users}
-                currentUser={username}
+          <div>
+            <nav>
+              <ul>
+                <li>
+                  <Link to="/">Sign Up</Link>
+                </li>
+                <li>
+                  <Link to="/login">Login</Link>
+                </li>
+              </ul>
+            </nav>
+            <Routes>
+              <Route
+                path="/"
+                element={<SignUp onRegister={handleRegister} />}
               />
-            }
-          />
-        </Routes>
+              <Route
+                path="/login"
+                element={<Login users={users} onLogin={handleLogin} />}
+              />
+            </Routes>
+          </div>
+        )}
       </div>
     </Router>
   );
