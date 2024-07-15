@@ -60,7 +60,6 @@ const App: React.FC = () => {
 
   const handleBeforeUnload = () => {
     sessionStorage.clear();
-    sessionStorage.clear();
   };
   const handleRegister = (user: User) => {
     const updatedUsers = [...users, user];
@@ -77,7 +76,6 @@ const App: React.FC = () => {
     setLoggedIn(false);
     setUsername("");
     setTokens([]);
-    sessionStorage.clear();
   };
   const handleChangePassword = (newPassword: string) => {
     const updatedUsers = users.map((user) =>
