@@ -76,6 +76,7 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setLoggedIn(false);
     setUsername("");
+    setTokens([]);
     sessionStorage.clear();
   };
   const handleChangePassword = (newPassword: string) => {
