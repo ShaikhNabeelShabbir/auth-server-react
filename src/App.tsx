@@ -29,6 +29,18 @@ const App: React.FC = () => {
   useEffect(() => {
     sessionStorage.setItem('loggedIn', JSON.stringify(loggedIn));
     sessionStorage.setItem('username', username);
+
+    // Cleanup sessionStorage and localStorage on component unmount (browser tab close)
+    const handleBeforeUnload = () => {
+      sessionStorage.clear();
+      localStorage.clear();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      handleBeforeUnload();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [loggedIn, username]);
 
   const handleRegister = (user: User) => {
@@ -45,7 +57,6 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setLoggedIn(false);
     setUsername('');
-    sessionStorage.clear();
   };
 
   const handleChangePassword = (newPassword: string) => {
