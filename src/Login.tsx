@@ -1,5 +1,3 @@
-// Login.tsx
-
 import React, { useState } from 'react';
 import bcrypt from 'bcryptjs';
 import { useNavigate } from 'react-router-dom';
@@ -18,22 +16,23 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const user = users.find(u => u.username === username);
+
     if (user && await bcrypt.compare(password, user.password)) {
-      alert('User logged in successfully');
       onLogin(username);
       navigate('/');
     } else {
-      alert('Invalid username or password');
+      setError('Invalid username or password');
     }
   };
 
   return (
-    <div className="container"> {/* Apply container class for centering and styling */}
+    <div className="container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -42,6 +41,7 @@ const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
         <div>
@@ -50,8 +50,10 @@ const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
+        {error && <span>{error}</span>}
         <button type="submit">Login</button>
       </form>
     </div>
