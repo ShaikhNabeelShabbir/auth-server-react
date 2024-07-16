@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./TokenList.css";
 
 interface Token {
@@ -8,9 +9,10 @@ interface Token {
 
 interface TokenListProps {
   tokens: Token[];
+  onDeleteToken: (address: string) => void;
 }
 
-const TokenList: React.FC<TokenListProps> = ({ tokens }) => {
+const TokenList: React.FC<TokenListProps> = ({ tokens, onDeleteToken }) => {
   return (
     <div className="token-list">
       <h2>Your Tokens</h2>
@@ -20,6 +22,11 @@ const TokenList: React.FC<TokenListProps> = ({ tokens }) => {
             <li key={index} className="token-item">
               <span className="token-address">Address: {token.address}</span>
               <span className="token-balance">Balance: {token.balance}</span>
+              <Link to={`/update-token/${token.address}`}>
+                <button>Update</button>
+              </Link>
+              <button onClick={() => onDeleteToken(token.address)}>Delete</button>
+              
             </li>
           ))}
         </ul>
@@ -31,3 +38,4 @@ const TokenList: React.FC<TokenListProps> = ({ tokens }) => {
 };
 
 export default TokenList;
+

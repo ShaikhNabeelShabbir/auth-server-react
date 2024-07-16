@@ -10,8 +10,9 @@ import SignUp from "./SignUp";
 import Login from "./Login";
 import ChangePassword from "./ChangePassword";
 import TokenList from "./TokenList";
-import "./styles.css"; // Import the CSS file for styling
 import CreateToken from "./CreateToken";
+import UpdateToken from "./UpdateToken";
+import "./styles.css";
 
 interface User {
   username: string;
@@ -64,7 +65,7 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setLoggedIn(false);
     setUsername("");
-    setTokens([]); // Clear tokens
+    setTokens([]);
     sessionStorage.clear();
   };
 
@@ -79,6 +80,18 @@ const App: React.FC = () => {
   const handleCreateToken = (address: string, balance: number) => {
     const newToken: Token = { address, balance };
     const updatedTokens = [...tokens, newToken];
+    setTokens(updatedTokens);
+  };
+
+  const handleUpdateToken = (address: string, balance: number) => {
+    const updatedTokens = tokens.map((token) =>
+      token.address === address ? { ...token, balance } : token
+    );
+    setTokens(updatedTokens);
+  };
+
+  const handleDeleteToken = (address: string) => {
+    const updatedTokens = tokens.filter((token) => token.address !== address);
     setTokens(updatedTokens);
   };
 
@@ -105,7 +118,12 @@ const App: React.FC = () => {
               />
               <Route
                 path="/show-tokens"
-                element={<TokenList tokens={tokens} />}
+                element={
+                  <TokenList
+                    tokens={tokens}
+                    onDeleteToken={handleDeleteToken}
+                  />
+                }
               />
               <Route
                 path="/change-password"
@@ -114,6 +132,15 @@ const App: React.FC = () => {
                     onChangePassword={handleChangePassword}
                     users={users}
                     currentUser={username}
+                  />
+                }
+              />
+              <Route
+                path="/update-token/:address"
+                element={
+                  <UpdateToken
+                    tokens={tokens}
+                    onUpdateToken={handleUpdateToken}
                   />
                 }
               />
