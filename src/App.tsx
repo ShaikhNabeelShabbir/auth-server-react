@@ -25,7 +25,7 @@ interface Token {
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>(() => {
-    const savedUsers = sessionStorage.getItem("users");
+    const savedUsers = localStorage.getItem("users");
     return savedUsers ? JSON.parse(savedUsers) : [];
   });
 
@@ -49,22 +49,11 @@ const App: React.FC = () => {
     sessionStorage.setItem("username", username);
     sessionStorage.setItem("tokens", JSON.stringify(tokens));
   }, [loggedIn, username, tokens]);
-  // Clear sessionStorage and localStorage on component unmount (browser tab close)
-  useEffect(() => {
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      handleBeforeUnload();
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
 
-  const handleBeforeUnload = () => {
-    sessionStorage.clear();
-  };
   const handleRegister = (user: User) => {
     const updatedUsers = [...users, user];
     setUsers(updatedUsers);
-    sessionStorage.setItem("users", JSON.stringify(updatedUsers));
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
   const handleLogin = (username: string) => {
@@ -75,14 +64,16 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setLoggedIn(false);
     setUsername("");
-    setTokens([]);
+    setTokens([]); // Clear tokens
+    sessionStorage.clear();
   };
+
   const handleChangePassword = (newPassword: string) => {
     const updatedUsers = users.map((user) =>
       user.username === username ? { ...user, password: newPassword } : user
     );
     setUsers(updatedUsers);
-    sessionStorage.setItem("users", JSON.stringify(updatedUsers));
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
   const handleCreateToken = (address: string, balance: number) => {
@@ -115,7 +106,7 @@ const App: React.FC = () => {
               <Route
                 path="/show-tokens"
                 element={<TokenList tokens={tokens} />}
-              />{" "}
+              />
               <Route
                 path="/change-password"
                 element={

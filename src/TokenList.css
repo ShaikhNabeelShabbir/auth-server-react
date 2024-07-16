@@ -1,0 +1,47 @@
+.token-list {
+  text-align: center;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.token-list h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.token-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.token-item {
+  margin: 10px 0;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.token-item:last-child {
+  border-bottom: none;
+}
+
+.token-address,
+.token-balance {
+  display: block;
+  font-size: 1.1em;
+  color: #555;
+}
+
+.token-address {
+  margin-bottom: 5px;
+}
+
+.token-balance {
+  font-weight: bold;
+  color: #333;
+}

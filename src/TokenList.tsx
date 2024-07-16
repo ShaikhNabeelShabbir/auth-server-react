@@ -1,4 +1,5 @@
 import React from "react";
+import "./TokenList.css";
 
 interface Token {
   address: string;
@@ -11,19 +12,19 @@ interface TokenListProps {
 
 const TokenList: React.FC<TokenListProps> = ({ tokens }) => {
   return (
-    <div>
-      <h2>Token List</h2>
-      {tokens.length === 0 ? (
-        <p>No tokens created yet.</p>
-      ) : (
+    <div className="token-list">
+      <h2>Your Tokens</h2>
+      {tokens.length > 0 ? (
         <ul>
           {tokens.map((token, index) => (
-            <li key={index}>
-              <strong>Address:</strong> {token.address} |{" "}
-              <strong>Balance:</strong> {token.balance}
+            <li key={index} className="token-item">
+              <span className="token-address">Address: {token.address}</span>
+              <span className="token-balance">Balance: {token.balance}</span>
             </li>
           ))}
         </ul>
+      ) : (
+        <p>No tokens created.</p>
       )}
     </div>
   );
