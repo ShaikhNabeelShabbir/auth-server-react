@@ -10,6 +10,7 @@ interface Token {
 interface TokenListProps {
   tokens: Token[];
   onDeleteToken: (address: string) => void;
+  onUpdateToken: (address: string, balance: number) => void; // Add this line
 }
 
 const TokenList: React.FC<TokenListProps> = ({ tokens, onDeleteToken }) => {
@@ -25,8 +26,9 @@ const TokenList: React.FC<TokenListProps> = ({ tokens, onDeleteToken }) => {
               <Link to={`/update-token/${token.address}`}>
                 <button>Update</button>
               </Link>
-              <button onClick={() => onDeleteToken(token.address)}>Delete</button>
-              
+              <button onClick={() => onDeleteToken(token.address)}>
+                Delete
+              </button>
             </li>
           ))}
         </ul>
@@ -38,4 +40,3 @@ const TokenList: React.FC<TokenListProps> = ({ tokens, onDeleteToken }) => {
 };
 
 export default TokenList;
-

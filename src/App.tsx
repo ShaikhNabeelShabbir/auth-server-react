@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import SignUp from "./SignUp";
 import Login from "./Login";
 import ChangePassword from "./ChangePassword";
 import TokenList from "./TokenList";
 import CreateToken from "./CreateToken";
 import UpdateToken from "./UpdateToken";
+import PrivateRoutes from "./PrivateRoute";
 import "./styles.css";
 
 interface User {
@@ -26,7 +21,7 @@ interface Token {
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>(() => {
-    const savedUsers = localStorage.getItem("users");
+    const savedUsers = sessionStorage.getItem("users");
     return savedUsers ? JSON.parse(savedUsers) : [];
   });
 
@@ -51,10 +46,22 @@ const App: React.FC = () => {
     sessionStorage.setItem("tokens", JSON.stringify(tokens));
   }, [loggedIn, username, tokens]);
 
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      handleBeforeUnload();
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  const handleBeforeUnload = () => {
+    sessionStorage.clear();
+  };
+
   const handleRegister = (user: User) => {
     const updatedUsers = [...users, user];
     setUsers(updatedUsers);
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    sessionStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
   const handleLogin = (username: string) => {
@@ -74,7 +81,7 @@ const App: React.FC = () => {
       user.username === username ? { ...user, password: newPassword } : user
     );
     setUsers(updatedUsers);
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    sessionStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
   const handleCreateToken = (address: string, balance: number) => {
@@ -111,40 +118,6 @@ const App: React.FC = () => {
             <Link to="/show-tokens">
               <button>Show Tokens</button>
             </Link>
-            <Routes>
-              <Route
-                path="/create-token"
-                element={<CreateToken onCreateToken={handleCreateToken} />}
-              />
-              <Route
-                path="/show-tokens"
-                element={
-                  <TokenList
-                    tokens={tokens}
-                    onDeleteToken={handleDeleteToken}
-                  />
-                }
-              />
-              <Route
-                path="/change-password"
-                element={
-                  <ChangePassword
-                    onChangePassword={handleChangePassword}
-                    users={users}
-                    currentUser={username}
-                  />
-                }
-              />
-              <Route
-                path="/update-token/:address"
-                element={
-                  <UpdateToken
-                    tokens={tokens}
-                    onUpdateToken={handleUpdateToken}
-                  />
-                }
-              />
-            </Routes>
           </div>
         ) : (
           <div>
@@ -158,7 +131,11 @@ const App: React.FC = () => {
                 </li>
               </ul>
             </nav>
-            <Routes>
+          </div>
+        )}
+        <Routes>
+          {!loggedIn && (
+            <>
               <Route
                 path="/"
                 element={<SignUp onRegister={handleRegister} />}
@@ -167,9 +144,44 @@ const App: React.FC = () => {
                 path="/login"
                 element={<Login users={users} onLogin={handleLogin} />}
               />
-            </Routes>
-          </div>
-        )}
+            </>
+          )}
+          <Route element={<PrivateRoutes loggedIn={loggedIn} />}>
+            <Route
+              path="/create-token"
+              element={<CreateToken onCreateToken={handleCreateToken} />}
+            />
+            <Route
+              path="/show-tokens"
+              element={
+                <TokenList
+                  tokens={tokens}
+                  onDeleteToken={handleDeleteToken}
+                  onUpdateToken={handleUpdateToken}
+                />
+              }
+            />
+            <Route
+              path="/change-password"
+              element={
+                <ChangePassword
+                  onChangePassword={handleChangePassword}
+                  users={users}
+                  currentUser={username}
+                />
+              }
+            />
+            <Route
+              path="/update-token/:address"
+              element={
+                <UpdateToken
+                  tokens={tokens}
+                  onUpdateToken={handleUpdateToken}
+                />
+              }
+            />
+          </Route>
+        </Routes>
       </div>
     </Router>
   );
